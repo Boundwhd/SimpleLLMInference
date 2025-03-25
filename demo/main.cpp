@@ -9,6 +9,7 @@ int main() {
     mem::Tensor A(dims, true, cuda_alloc);
     mem::Tensor B(dims, true, cuda_alloc);
     mem::Tensor C(dims, true, cuda_alloc);
+
     float A_H[16];
     float B_H[16];
     float C_H[16];
