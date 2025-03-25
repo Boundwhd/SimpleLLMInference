@@ -24,39 +24,17 @@ namespace op {
     base::DeviceType BaseLayer::device_type() const {
         return device_type_;
     }
-    
+
+    void BaseLayer::set_weight(int32_t idx, const mem::Tensor& weight) {
+        LOG("Function not Implementation!");
+    }
+
+    void BaseLayer::set_weight(int32_t idx, const std::vector<int32_t>& dims, const void* weight_ptr, base::DeviceType device_type) {
+        LOG("Function not Implementation!");
+    }
     // Layer----------------------------------------------------------------------------------------------------
     Layer::Layer(base::DeviceType device_type, LayerType layer_type, std::string layer_name) 
         : BaseLayer(device_type, layer_type, std::move(layer_name)) {}
-
-    void Layer::check_tensor(const mem::Tensor& tensor, base::DeviceType device_type) const {
-        if (tensor.is_empty()) {
-            LOG("The tensor parameter is empty.");
-        }
-        if (tensor.device_type() != device_type) {
-            LOG("The tensor has a wrong device type.");
-        }
-    }
-
-    void Layer::check_tensor_with_dim(const mem::Tensor& tensor, base::DeviceType device_type, ...) const {
-        std::va_list args;
-        if (tensor.is_empty()) {
-            LOG("The tensor parameter is empty.");
-        }
-        if (tensor.device_type() != device_type) {
-            LOG("The tensor has a wrong device type.");
-        }
-
-        va_start(args, device_type);
-        int32_t dims = tensor.dims_size();
-        for (int32_t i = 0; i < dims; ++i) {
-            int32_t dim = va_arg(args, int32_t);
-            if (dim != tensor.get_dim(i)) {
-                LOG("The tensor has a wrong dim in dim" + std::to_string(i));
-            }
-        }
-        va_end(args);
-    }
 
     void Layer::set_input(int32_t idx, const mem::Tensor& input) {
         this->inputs_.at(idx) = input;
@@ -110,14 +88,14 @@ namespace op {
     void Layer::forward(const mem::Tensor& input1, const mem::Tensor& output1) {
         this->set_input(0, input1);
         this->set_output(0, output1);
-        return;
+        return this->forward();
     }
 
     void Layer::forward(const mem::Tensor& input1, const mem::Tensor& input2, const mem::Tensor& output1) {
         this->set_input(0, input1);
         this->set_input(1, input2);
         this->set_output(0, output1);
-        return;
+        return this->forward();
     }
 
     void Layer::forward(const mem::Tensor& input1, const mem::Tensor& input2, const mem::Tensor& input3, 
@@ -126,7 +104,7 @@ namespace op {
         this->set_input(1, input2);
         this->set_input(2, input3);
         this->set_output(0, output1);
-        return;
+        return this->forward();
     }
 
     void Layer::forward(const mem::Tensor& input1, const mem::Tensor& input2, const mem::Tensor& input3, 
@@ -136,7 +114,7 @@ namespace op {
         this->set_input(2, input3);
         this->set_input(3, input4);
         this->set_output(0, output1);
-        return;
+        return this->forward();
     }
 
     void Layer::forward(const mem::Tensor& input1, const mem::Tensor& input2, const mem::Tensor& input3, 
@@ -147,7 +125,11 @@ namespace op {
         this->set_input(3, input4);
         this->set_input(4, input5);
         this->set_output(0, output1);
-        return;
+        return this->forward();
+    }
+
+    void Layer::forward() {
+        LOG("Function not Implementation!");
     }
     // ParamLayer----------------------------------------------------------------------------------------------------
     LayerParam::LayerParam(base::DeviceType device_type, LayerType layer_type, std::string layer_name)

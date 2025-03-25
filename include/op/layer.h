@@ -38,8 +38,6 @@ public:
 
     void set_device_type(base::DeviceType device_type);
 
-    virtual void init() = 0;
-
     virtual void forward() = 0;
 
     virtual void forward(const mem::Tensor& input1, const mem::Tensor& output1) = 0;
@@ -63,8 +61,6 @@ public:
 
     virtual size_t output_size() const = 0;
 
-    virtual void check() const = 0;
-
     virtual mem::Tensor& get_input(int32_t idx) = 0;
 
     virtual mem::Tensor& get_output(int32_t idx) = 0;
@@ -73,19 +69,15 @@ public:
 
     virtual const mem::Tensor& get_output(int32_t idx) const = 0;
 
-    virtual void set_weight(int32_t idx, const mem::Tensor& weight) = 0;
+    virtual void set_weight(int32_t idx, const mem::Tensor& weight);
 
     virtual void set_weight(int32_t idx, const std::vector<int32_t>& dims, const void* weight_ptr, 
-        base::DeviceType device_type = base::DeviceType::kDeviceUnknown) = 0;
+        base::DeviceType device_type = base::DeviceType::kDeviceUnknown);
 };
 
 class Layer : public BaseLayer {
 public:
     explicit Layer(base::DeviceType device_type, LayerType layer_type, std::string layer_name = "");
-
-    void check_tensor(const mem::Tensor& tensor, base::DeviceType device_type) const;
-
-    void check_tensor_with_dim(const mem::Tensor& tensor, base::DeviceType device_type, ...) const;
 
     void set_input(int32_t idx, const mem::Tensor& input) override;
 
@@ -108,6 +100,8 @@ public:
     void reset_output_size(size_t size);
 
     virtual void to_cuda();
+
+    void forward() override;
 
     void forward(const mem::Tensor& input1, const mem::Tensor& output1) override;
 

@@ -57,7 +57,13 @@ public:
     T* ptr(int64_t index);
 
     template <typename T>
+    const T* ptr(int64_t index) const;
+
+    template <typename T>
     T& index(int64_t offset);
+    
+    template <typename T>
+    const T& index(int64_t offset) const;
 
     Tensor clone() const;
 private:
@@ -91,11 +97,28 @@ T* Tensor::ptr(int64_t index) {
 }
 
 template <typename T>
+const T* Tensor::ptr(int64_t index) const {
+    if (!buffer_ || !buffer_->ptr()) {
+        LOG("ERROR Get Ptr!");
+    }
+    return (reinterpret_cast<const T*>(buffer_->ptr())) + index;
+}
+
+template <typename T>
 T& Tensor::index(int64_t offset) {
     if (offset < 0 || offset >= this->size()) {
         LOG("ERROR Index!");
     } 
     T& val = *(reinterpret_cast<T*>(buffer_->ptr()) + offset);
+    return val;
+}
+
+template <typename T>
+const T& Tensor::index(int64_t offset) const {
+    if (offset < 0 || offset >= this->size()) {
+        LOG("ERROR Index!");
+    } 
+    const T& val = *(reinterpret_cast<T*>(buffer_->ptr()) + offset);
     return val;
 }
 };
