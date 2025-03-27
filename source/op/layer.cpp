@@ -78,10 +78,14 @@ namespace op {
     
     void Layer::to_cuda() {
         for (auto& input : inputs_) {
-            input.to_cuda();
+            if (!input.is_empty()) {
+                input.to_cuda();
+            }
         }
         for (auto& output : outputs_) {
-            output.to_cuda();
+            if (!output.is_empty()) {
+                output.to_cuda();
+            }
         }
     }
 

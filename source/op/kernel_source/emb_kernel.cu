@@ -11,14 +11,8 @@ namespace kernel {
     void emb_kernel_cuda(const mem::Tensor& input1, const mem::Tensor& weight, 
         const mem::Tensor& output, int32_t vocab_size) {
         const int32_t weight_dim = weight.get_dim(1);
-        int32_t token = 0;
-        if (input1.device_type() == base::DeviceType::kDeviceCUDA) {
-            mem::Tensor input_cpu = input1.clone();
-            input_cpu.to_cpu();
-            token = *(input_cpu.ptr<int32_t>());
-        } else {
-            token = *(input1.ptr<int32_t>());
-        }
+        int32_t token = *(input1.ptr<int32_t>());
+        
         float* src_ptr = const_cast<float*>(weight.ptr<float>(token * weight_dim));
         float* dst_ptr = const_cast<float*>(output.ptr<float>());
 
