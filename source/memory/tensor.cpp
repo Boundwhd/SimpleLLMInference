@@ -195,4 +195,19 @@ namespace mem{
         new_tensor.buffer_->copy_from(buffer_.get());
         return new_tensor;
     }
+    
+    std::pair<Tensor, Tensor> slice_KV_cache(int32_t layer_idx, int32_t pos, 
+        int32_t max_seq_len, int32_t dim, const Tensor& key_cache, const Tensor& value_cache) {
+
+        int32_t layer_offset = layer_idx * max_seq_len * dim;
+        int32_t cache_offset = layer_offset + pos * dim;
+    
+        float* key_cache_ptr = const_cast<float*>(key_cache.ptr<float>() + cache_offset);
+        float* value_cache_ptr = const_cast<float*>(value_cache.ptr<float>() + cache_offset);
+    
+        Tensor key({dim}, false, nullptr, key_cache_ptr);
+        Tensor value({dim}, false, nullptr, value_cache_ptr);
+    
+        return {key, value};
+    }
 };

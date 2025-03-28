@@ -3,6 +3,7 @@
 #include <driver_types.h>
 #include "alloc.h"
 #include "buffer.h"
+#include <utility>
 #include <numeric>
 
 namespace mem {
@@ -121,5 +122,9 @@ const T& Tensor::index(int64_t offset) const {
     const T& val = *(reinterpret_cast<T*>(buffer_->ptr()) + offset);
     return val;
 }
+
+std::pair<Tensor, Tensor> slice_KV_cache(int32_t layer_idx, int32_t pos, 
+    int32_t max_seq_len, int32_t dim, const Tensor& key_cache, const Tensor& value_cache);
 };
+
 #endif
