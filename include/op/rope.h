@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _ROPE_WHD_H_
 #define _ROPE_WHD_H_
 #include "layer.h"

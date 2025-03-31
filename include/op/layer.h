@@ -69,10 +69,10 @@ public:
 
     virtual const mem::Tensor& get_output(int32_t idx) const = 0;
 
-    virtual void set_weight(int32_t idx, const mem::Tensor& weight);
+    virtual void set_weight(int32_t idx, const mem::Tensor& weight) = 0;
 
     virtual void set_weight(int32_t idx, const std::vector<int32_t>& dims, const void* weight_ptr, 
-        base::DeviceType device_type = base::DeviceType::kDeviceUnknown);
+        base::DeviceType device_type = base::DeviceType::kDeviceUnknown) = 0;
 };
 
 class Layer : public BaseLayer {
@@ -98,6 +98,11 @@ public:
     void reset_input_size(size_t size);
 
     void reset_output_size(size_t size);
+
+    void set_weight(int32_t idx, const mem::Tensor& weight) override;
+
+    void set_weight(int32_t idx, const std::vector<int32_t>& dims, const void* weight_ptr, 
+        base::DeviceType device_type = base::DeviceType::kDeviceUnknown) override;
 
     virtual void to_cuda();
 

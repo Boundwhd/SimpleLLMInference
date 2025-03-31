@@ -15,5 +15,6 @@ namespace model {
     struct RawModelDataFp32 : RawModelData {
         const void* weight(size_t offset) const override;
     };
+    
 };
 #endif

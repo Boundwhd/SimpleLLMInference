@@ -1,7 +1,6 @@
 #include "matmul.h"
-#include "layer.h"
 #include "matmul_kernel.h"
-#include "matmul_kernel.cuh"
+
 namespace op {
     MatmulLayer::MatmulLayer(base::DeviceType device_type)
     : LayerParam(device_type, LayerType::kLayerMatmul, "Matmul") {
@@ -19,7 +18,7 @@ namespace op {
         if (device_type_ == base::DeviceType::kDeviceCPU) {
             kernel::matmul_kernel_cpu(input1, weight, output);
         } else if (device_type_ == base::DeviceType::kDeviceCUDA) {
-            kernel::matmul_kernel_cuda(input1, weight, output);
+            // 待实现
         } else {
             LOG("Device Type ERROR!");
         }

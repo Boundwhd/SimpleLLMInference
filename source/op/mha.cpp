@@ -1,5 +1,6 @@
 #include "mha.h"
 #include "mha_kernel.h"
+
 namespace op {
     MultiHeadAttention::MultiHeadAttention(base::DeviceType device_type, int32_t layer_index, 
         int32_t seq_len, int32_t head_num, int32_t head_size, int32_t pos, int32_t dim)
@@ -33,7 +34,7 @@ namespace op {
         if (device_type_ == base::DeviceType::kDeviceCPU) {
             kernel::mha_kernel_cpu(query, score, key_cache, value_cache, mha_out, layer_index_, pos_, seq_len_, dim_, head_num_, head_size_, device_type_);
         } else if (device_type_ == base::DeviceType::kDeviceCUDA){
-            // kernel::mha_kernel_cuda(query, score, key_cache, value_cache, mha_out, layer_index_, pos_, seq_len_, dim_, head_num_, head_size_, device_type_);
+            // 待实现
         } else {
             LOG("Device Type ERROR!");
         }

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _MATMUL_WHD_H_
 #define _MATMUL_WHD_H_
 #include "layer.h"

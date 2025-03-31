@@ -17,7 +17,7 @@ enum class MemcpyKind {
     kMemcpyCUDA2CUDA = 3,
 };
 
-enum DeviceType {
+enum class DeviceType {
     kDeviceUnknown = 0,
     kDeviceCPU = 1,
     kDeviceCUDA = 2,

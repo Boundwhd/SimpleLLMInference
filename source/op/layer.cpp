@@ -1,5 +1,6 @@
 #include "layer.h"
 #include <cstdarg>
+
 namespace op {
     // BaseLayer----------------------------------------------------------------------------------------------------
     BaseLayer::BaseLayer(base::DeviceType device_type, LayerType layer_type, std::string layer_name) 
@@ -130,6 +131,14 @@ namespace op {
         this->set_input(4, input5);
         this->set_output(0, output1);
         return this->forward();
+    }
+
+    void Layer::set_weight(int32_t idx, const mem::Tensor& weight) {
+        LOG("Function not Implementation!");
+    }
+
+    void Layer::set_weight(int32_t idx, const std::vector<int32_t>& dims, const void* weight_ptr, base::DeviceType device_type) {
+        LOG("Function not Implementation!");
     }
 
     void Layer::forward() {

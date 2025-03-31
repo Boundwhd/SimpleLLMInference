@@ -9,7 +9,7 @@
 #include <cuda_runtime_api.h>
 #include "base.h"
 
-#define DaraTypeSize 4
+#define DataTypeSize 4
 /**
  * mem 命名空间：
  * 1. CPU 设备管理，内存申请，释放

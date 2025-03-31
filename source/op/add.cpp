@@ -1,7 +1,6 @@
 #include "add.h"
-#include "layer.h"
-#include "add_kernel.cuh"
 #include "add_kernel.h"
+
 namespace op {
     VecAddLayer::VecAddLayer(base::DeviceType device_type) : Layer(device_type, LayerType::kLayerAdd, "Add") {
         reset_input_size(2);
@@ -15,7 +14,7 @@ namespace op {
         if (device_type_ == base::DeviceType::kDeviceCPU) {
             kernel::add_kernel_cpu(input1, input2, output);
         } else if (device_type_ == base::DeviceType::kDeviceCUDA){
-            kernel::add_kernel_cuda(input1, input2, output);
+            // 待实现
         } else {
             LOG("Device Type ERROR!");
         }

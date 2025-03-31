@@ -18,7 +18,6 @@ namespace mem {
                 ptr_ = nullptr;
             }
         }
-        std::cout << "release...." << std::endl;
     }
 
     void* Buffer::ptr() {

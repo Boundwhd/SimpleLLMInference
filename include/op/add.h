@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _ADD_WHD_H_
 #define _ADD_WHD_H_
 #include "layer.h"
@@ -9,5 +10,6 @@ public:
 
     void forward() override;
 };
+
 }
 #endif

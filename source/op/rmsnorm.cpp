@@ -1,7 +1,6 @@
 #include "rmsnorm.h"
-#include "layer.h"
-#include "rms_kernel.cuh"
 #include "rms_kernel.h"
+
 namespace op {
     RmsNormLayer::RmsNormLayer(base::DeviceType device_type) 
         : LayerParam(device_type, LayerType::kLayerRMSNorm, "RMSNorm") {
@@ -19,7 +18,7 @@ namespace op {
         if (device_type_ == base::DeviceType::kDeviceCPU) {
             kernel::rmsnorm_kernel_cpu(input, weight, output);
         } else if (device_type_ == base::DeviceType::kDeviceCUDA){
-            kernel::rmsnorm_kernel_cuda(input, weight, output);
+            // 待实现
         } else {
             LOG("Device Type ERROR!");
         }

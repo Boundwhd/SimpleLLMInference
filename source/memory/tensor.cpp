@@ -43,7 +43,7 @@ namespace mem{
 
     void Tensor::init_buffer(std::shared_ptr<DeviceAllocator> alloc, bool need_alloc, void* ptr) {
         if (!alloc && !need_alloc) {
-            std::shared_ptr<Buffer> buffer = std::make_shared<Buffer>(DaraTypeSize * size_, nullptr, ptr, true);
+            std::shared_ptr<Buffer> buffer = std::make_shared<Buffer>(DataTypeSize * size_, nullptr, ptr, true);
             this->buffer_ = buffer;
         } else {
             allocate(alloc, true);
@@ -51,7 +51,7 @@ namespace mem{
     }
 
     size_t Tensor::byte_size() const {
-        return DaraTypeSize * this->size_;
+        return DataTypeSize * this->size_;
     }
 
     base::DeviceType Tensor::device_type() const {
@@ -110,7 +110,7 @@ namespace mem{
             return;
         }
         if (size > size_) {
-            auto new_buffer = std::make_shared<Buffer>(size * DaraTypeSize, buffer_->allocator());
+            auto new_buffer = std::make_shared<Buffer>(size * DataTypeSize, buffer_->allocator());
             new_buffer->copy_from(buffer_.get());
             this->buffer_ = new_buffer;
         }

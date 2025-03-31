@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _MHA_WHD_H_
 #define _MHA_WHD_H_
 #include "layer.h"
@@ -22,6 +23,5 @@ private:
     int32_t head_size_ = 0;
 };
 };
-
 
 #endif 

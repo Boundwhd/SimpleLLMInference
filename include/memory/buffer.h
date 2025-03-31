@@ -1,6 +1,7 @@
 #ifndef _BUFFER_WHD_H_
 #define _BUFFER_WHD_H_
 #include "alloc.h"
+
 namespace mem {
 
 class NoCopyable {
