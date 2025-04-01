@@ -1,14 +1,14 @@
 #include "rope_kernel.h"
 #include <math.h>
 namespace kernel {
-    void rope_cache_cal(int head_size, int max_seq_len, const mem::Tensor sin_cache, const mem::Tensor cos_cache) {
+    void rope_cache_cal(int head_size, int max_seq_len, const mem::Tensor sin_cache, const mem::Tensor cos_cache, float rope_theta) {
         float* sin_ptr = const_cast<float*>(sin_cache.ptr<float>());
         float* cos_ptr = const_cast<float*>(cos_cache.ptr<float>());
 
         for (int i = 0; i < max_seq_len; i++) {
             for (int d = 0; d < head_size / 2; d++) {
                 int tmp = 2 * d;
-                float freq = 1.0f / (std::pow(10000.0f, static_cast<float>(tmp) / static_cast<float>(head_size)));
+                float freq = 1.0f / (std::pow(rope_theta, static_cast<float>(tmp) / static_cast<float>(head_size)));
                 float val = freq * i;
                 float fcr = cosf(val);
                 float fci = sinf(val);
