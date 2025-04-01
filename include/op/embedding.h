@@ -6,13 +6,13 @@
 namespace op {
 class EmbeddingLayer : public LayerParam {
 public:
-    explicit EmbeddingLayer(base::DeviceType device_type, int32_t vocab_size);
+    explicit EmbeddingLayer(base::DeviceType device_type, int32_t vocab_size, int32_t hidden_dim_size);
     
     void forward() override;
 private:
     int32_t vocab_size_ = 0;
+    int32_t hidden_dim_size_ = 0;
 };
-
 };
 
 #endif

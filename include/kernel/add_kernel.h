@@ -3,7 +3,7 @@
 #include "tensor.h"
 
 namespace kernel {
-    void add_kernel_cpu(const mem::Tensor& input1, const mem::Tensor& input2, const mem::Tensor& output);
+    void add_kernel_cpu(const mem::Tensor& input1, const mem::Tensor& input2, const mem::Tensor& output, int32_t dim_size);
 };
 
 #endif

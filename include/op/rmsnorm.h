@@ -6,9 +6,13 @@
 namespace op {
 class RmsNormLayer : public LayerParam {
 public:
-    explicit RmsNormLayer(base::DeviceType device_type);
+    explicit RmsNormLayer(base::DeviceType device_type, int32_t hidden_dim_size, float eps);
 
     void forward() override;
+
+private:
+    int32_t hidden_dim_size_ = 0;
+    float eps_ = 0;
 };
 
 };

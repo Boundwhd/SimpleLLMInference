@@ -4,7 +4,7 @@
 
 namespace kernel {
     void emb_kernel_cpu(const mem::Tensor& input, const mem::Tensor& weight,
-        const mem::Tensor& output, int32_t vocab_size);
+        const mem::Tensor& output, int32_t vocab_size, int32_t hidden_dim_size);
 }
 
 #endif

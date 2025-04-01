@@ -60,7 +60,7 @@ namespace kernel {
                 const float* key_head_addr = key_cache.ptr<float>() + layer_offset + cache_offset;
                 mem::Tensor key_mat({1, head_size}, false, nullptr, const_cast<float*>(key_head_addr));
                 mem::Tensor score_mat({1}, false, nullptr, score_addr + p);
-                matmul_kernel_cpu(query_mat, key_mat, score_mat);
+                matmul_kernel_cpu(query_mat, key_mat, score_mat, scale);
             }
 
             mem::Tensor score_head_tensor({pos + 1}, false, nullptr, score_addr);
