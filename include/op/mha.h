@@ -6,8 +6,13 @@
 namespace op {
 class MultiHeadAttention : public op::Layer {
 public:
-    explicit MultiHeadAttention(base::DeviceType device_type, int32_t layer_index, 
-        int32_t seq_len, int32_t head_num, int32_t head_size, int32_t pos, int32_t dim);
+    explicit MultiHeadAttention(
+        base::DeviceType device_type, 
+        int32_t max_seq_len, 
+        int32_t head_dim, 
+        int32_t num_attention_heads,  
+        int32_t num_key_value_heads
+    );
     
     void set_pos(int32_t pos);
 
@@ -17,11 +22,14 @@ public:
 private:
     int32_t layer_index_ = 0;
     int32_t pos_ = 0;
-    int32_t dim_ = 0;
-    int32_t seq_len_ = 0;
-    int32_t head_num_ = 0;
-    int32_t head_size_ = 0;
+    int32_t max_seq_len_ = 0;
+    int32_t head_dim_ = 0;
+    int32_t hidden_dim_ = 0;
+    int32_t kv_hidden_dim_ = 0;
+    int32_t num_attention_heads_ = 0;
+    int32_t num_key_value_heads_ = 0;
+    int32_t att_kv_head_group_ = 0;
 };
-};
+}
 
 #endif 

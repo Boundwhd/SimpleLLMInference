@@ -2,18 +2,24 @@
 #include "mha_kernel.h"
 
 namespace op {
-    MultiHeadAttention::MultiHeadAttention(base::DeviceType device_type, int32_t layer_index, 
-        int32_t seq_len, int32_t head_num, int32_t head_size, int32_t pos, int32_t dim)
-        :   Layer(device_type, LayerType::kLayerMHA, "MultiHeadAttention"),
-            layer_index_(layer_index),
-            seq_len_(seq_len),
-            head_num_(head_num),
-            head_size_(head_size),
-            pos_(pos), 
-            dim_(dim) {
+    MultiHeadAttention::MultiHeadAttention(
+        base::DeviceType device_type,
+        int32_t max_seq_len,
+        int32_t head_dim,
+        int32_t num_attention_heads,
+        int32_t num_key_value_heads
+    ) : Layer(device_type, LayerType::kLayerMHA, "MultiHeadAttention"),
+        max_seq_len_(max_seq_len),
+        head_dim_(head_dim),
+        num_attention_heads_(num_attention_heads),
+        num_key_value_heads_(num_key_value_heads) {
         
         reset_input_size(4);
         reset_output_size(1);
+
+        hidden_dim_ = num_attention_heads * head_dim;
+        kv_hidden_dim_ = num_key_value_heads * head_dim;
+        att_kv_head_group_ = num_attention_heads / num_key_value_heads;
     }
     
     void MultiHeadAttention::set_pos(int32_t pos) {
@@ -32,7 +38,8 @@ namespace op {
         const mem::Tensor& mha_out = this->get_output(0);
 
         if (device_type_ == base::DeviceType::kDeviceCPU) {
-            kernel::mha_kernel_cpu(query, score, key_cache, value_cache, mha_out, layer_index_, pos_, seq_len_, dim_, head_num_, head_size_, device_type_);
+            kernel::mha_kernel_cpu(query, score, key_cache, value_cache, mha_out, layer_index_, pos_, 
+                max_seq_len_, head_dim_, hidden_dim_, kv_hidden_dim_, att_kv_head_group_, num_attention_heads_, device_type_);
         } else if (device_type_ == base::DeviceType::kDeviceCUDA){
             // 待实现
         } else {
