@@ -1,5 +1,6 @@
 #include "rmsnorm.h"
 #include "rms_kernel.h"
+#include "rms_kernel.cuh"
 
 namespace op {
     RmsNormLayer::RmsNormLayer(base::DeviceType device_type, int32_t hidden_dim_size, float eps) 
@@ -18,7 +19,7 @@ namespace op {
         if (device_type_ == base::DeviceType::kDeviceCPU) {
             kernel::rmsnorm_kernel_cpu(input, weight, output, hidden_dim_size_, eps_);
         } else if (device_type_ == base::DeviceType::kDeviceCUDA){
-            // 待实现
+            kernel::rmsnorm_kernel_cuda(input, weight, output, hidden_dim_size_, eps_);
         } else {
             LOG("Device Type ERROR!");
         }

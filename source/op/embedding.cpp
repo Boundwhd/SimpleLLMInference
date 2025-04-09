@@ -1,5 +1,6 @@
 #include "embedding.h"
 #include "emb_kernel.h"
+#include "emb_kernel.cuh"
 
 namespace op {
     EmbeddingLayer::EmbeddingLayer(base::DeviceType device_type, int32_t vocab_size, int32_t hidden_dim_size)
@@ -18,7 +19,7 @@ namespace op {
         if (device_type_ == base::DeviceType::kDeviceCPU) {
             kernel::emb_kernel_cpu(input1, weight, output, vocab_size_, hidden_dim_size_);
         } else if (device_type_ == base::DeviceType::kDeviceCUDA){
-            // 待实现
+            kernel::emb_kernel_cuda(input1, weight, output, vocab_size_, hidden_dim_size_);
         } else {
             LOG("Device Type ERROR!");
         }
