@@ -5,6 +5,14 @@
 #include <memory>
 #include <sentencepiece_processor.h>
 
+// Llama 3
+#include <absl/strings/str_join.h>
+#include <absl/strings/str_replace.h>
+#include <absl/strings/str_split.h>
+#include "tiktoken.h"
+#include "unordered_dense.h"
+#include "nlohmann/json.hpp"
+
 namespace op {
 class SPELayer {
 public:

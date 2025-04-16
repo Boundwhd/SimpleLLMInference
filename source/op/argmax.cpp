@@ -10,8 +10,6 @@ namespace op {
         if (device_type_ == base::DeviceType::kDeviceCPU) {
             size_t next = std::distance(logits_ptr, std::max_element(logits_ptr, logits_ptr + hidden_dim_size_));
             *(const_cast<int32_t*>(input_idx.ptr<int32_t>())) = next;
-        } else if (device_type_ == base::DeviceType::kDeviceCUDA){
-            // 待实现
         } else {
             LOG("wrong device!\n");
         }

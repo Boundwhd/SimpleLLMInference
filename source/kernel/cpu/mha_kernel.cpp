@@ -50,7 +50,7 @@ namespace kernel {
 
             for (int t = 0; t <= pos; t++) {
                 int32_t cache_offset = t * kv_hidden_dim + (h / att_kv_head_group) * head_dim;
-                const float* key_head_addr = key_cache.ptr<float>() + layer_index + cache_offset;
+                const float* key_head_addr = key_cache.ptr<float>() + layer_offset + cache_offset;
 
                 mem::Tensor key_mat({1, head_dim}, false, nullptr, const_cast<float*>(key_head_addr));
                 mem::Tensor score_mat({1}, false, nullptr, score_head_addr + t);
@@ -69,7 +69,7 @@ namespace kernel {
             output_mat.set_device_type(device_type);
 
             int32_t cache_offset = (h / att_kv_head_group) * head_dim;
-            float* value_head_addr = const_cast<float*>(value_cache.ptr<float>()) + layer_index + cache_offset;
+            float* value_head_addr = const_cast<float*>(value_cache.ptr<float>()) + layer_offset + cache_offset;
             mem::Tensor value_mat({head_dim}, false, nullptr, value_head_addr);
 
             attention_output_kernel(score_mat, value_mat, output_mat, pos, head_dim, kv_hidden_dim);

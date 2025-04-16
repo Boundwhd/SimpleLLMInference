@@ -77,7 +77,6 @@ namespace model {
                 get_buffer(ModelBufferType::mha_output)
             );
 
-    
             Llama_layers_->wo_layers_[id_layer]->forward(
                 get_buffer(ModelBufferType::mha_output),
                 get_buffer(ModelBufferType::att_output)
@@ -128,19 +127,63 @@ namespace model {
                 get_buffer(ModelBufferType::emb_output)
             );
         }
-        log_file.close();  // Close the log file
+
+        Llama_layers_->rmsnorm_layers_[2 * config_->num_hidden_layers]->forward(
+            get_buffer(ModelBufferType::emb_output),
+            get_buffer(ModelBufferType::rms_output)
+        );
+
+        Llama_layers_->cls_layer->forward(
+            get_buffer(ModelBufferType::rms_output),
+            get_buffer(ModelBufferType::model_pred)
+        );
     }
 
     void LlamaModel::predict(const std::string prompt, const int max_length) {
+
+        // 初始提示词数量
+        std::vector<int> input_ids = Llama_layers_->encode_layer_->encode(prompt);
+        int prompt_nums = input_ids.size();
+
+        int32_t pos  = 0;
         auto input_tensor = get_buffer(ModelBufferType::input_token);
         auto pos_tensor = get_buffer(ModelBufferType::position);
-        int32_t pos  = 0;
+        input_tensor.index<int32_t>(0) = input_ids[pos]; 
+        pos_tensor.index<int32_t>(0) = pos; 
+
+        std::string out_str = Llama_layers_->encode_layer_->decode({input_ids[pos]});
+        std::cout << out_str << " ";
+
         while (pos < max_length) {
-            input_tensor.index<int32_t>(0) = 100;
-            pos_tensor.index<int32_t>(0) = 120;
             this->forward();
-            pos++;
+            if (pos < prompt_nums - 1) {
+                pos++;
+                int32_t next = input_ids[pos];
+                out_str = Llama_layers_->encode_layer_->decode({next});
+                std::cout << out_str << " ";
+                pos_tensor.index<int32_t>(0) = pos;
+                input_tensor.index<int32_t>(0) = next;
+            } else {
+                pos++;
+                pos_tensor.index<int32_t>(0) = pos;
+                if (device_type_ == base::DeviceType::kDeviceCPU) {
+                    Llama_layers_->argmax_layer_->forward(get_buffer(ModelBufferType::model_pred), input_tensor);
+                    int32_t next = input_tensor.index<int32_t>(0);
+                    out_str = Llama_layers_->encode_layer_->decode({next});
+                    std::cout << out_str << " ";
+                } else {
+                    auto cpu_alloc = mem::CPUDeviceAllocatorFactory::get_instance();
+                    auto model_pred_cuda = get_buffer(ModelBufferType::model_pred);
+                    auto model_pred_cpu = mem::Tensor({config_->vocab_size}, true, cpu_alloc);
+                    cpu_alloc->memcpy(model_pred_cuda.ptr<float>(), model_pred_cpu.ptr<float>(), config_->vocab_size * sizeof(float), base::MemcpyKind::kMemcpyCUDA2CPU);
+                    Llama_layers_->argmax_layer_->forward(model_pred_cpu, input_tensor);
+                    int32_t next = input_tensor.index<int32_t>(0);
+                    out_str = Llama_layers_->encode_layer_->decode({next});
+                    std::cout << out_str << " ";
+                }
+            }
         }
+        std::cout << std::endl;
     }
 
     void LlamaModel::insert_buffer(ModelBufferType buffer_idx, const mem::Tensor& tensor) {
@@ -281,7 +324,7 @@ namespace model {
         if (!Llama_layers_) {
             LOG("Llama layers are not initiallized\n");
         }
-
+        Llama_layers_->argmax_layer_ = std::make_shared<op::argmaxLayer>(base::DeviceType::kDeviceCPU, config_->vocab_size);
         Llama_layers_->encode_layer_ = std::make_shared<op::SPELayer>(tokenizer_path_);
         Llama_layers_->add_layer_ = std::make_shared<op::VecAddLayer>(device_type_, config_->hidden_size);
         Llama_layers_->mha_layer_ = std::make_shared<op::MultiHeadAttention>(device_type_, config_->max_length, config_->head_dim, 

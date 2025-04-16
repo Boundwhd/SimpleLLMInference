@@ -1,5 +1,7 @@
 #include "swiglu.h"
 #include "swiglu_kernel.h"
+#include "swiglu_kernel.cuh"
+
 namespace op {
     SwigluLayer::SwigluLayer(base::DeviceType device_type, int32_t intermediate_size) 
     : Layer(device_type, op::LayerType::kLayerSwiGLU, "SwiGLU"), intermediate_size_(intermediate_size) {
@@ -16,7 +18,7 @@ namespace op {
         if (device_type_ == base::DeviceType::kDeviceCPU) {
             kernel::swiglu_kernel_cpu(up, gate, output, intermediate_size_);
         } else if (device_type_ == base::DeviceType::kDeviceCUDA){
-            // 待实现
+            kernel::swiglu_kernel_cuda(up, gate, output, intermediate_size_);
         } else {
             LOG("Device Type ERROR!");
         }
